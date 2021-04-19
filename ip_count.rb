@@ -4,7 +4,7 @@
 # meta
 ################
 
-# description: return the number of ip addresses available given a text file containing a list of networks in cidr notation
+# description: return the number of assignable ip addresses (including gateways) available given a text file containing a list of networks in cidr notation
 # dependencies: ruby >= 2.6.3p62 and netaddr 2.0.4 (gem install netaddr)
 # contact: matt rush <matthew.rush@trustedsite.com> <m@root.dance>
 # date: 04/19/2021
@@ -29,7 +29,7 @@ same_line += "\x1B[2K" # clear entire line again
 ################
 
 def usage
-  STDERR.puts("usage: $0 input_file.txt")
+  STDERR.puts("usage: #{$0} input_file.txt")
 end
 
 def format_message(message,title='ok')
@@ -79,11 +79,11 @@ lines.each do |line|
 
   network = NetAddr::IPv4Net.parse(line)
 
-  total_hosts += network.len
-  format_notice("subtotal: #{network.len} / total: #{total_hosts}","network: #{line.chomp}")
+  total_hosts += network.len - 2
+  format_notice("subtotal: #{network.len - 2} / total: #{total_hosts}","network: #{line.chomp}")
 end
 
 STDERR.puts('')
-format_heading('total addresses')
+format_heading('total assignable addresses')
 
 STDOUT.puts total_hosts
